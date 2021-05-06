@@ -5,10 +5,10 @@ mixer.init()
 v = 1
 p = i = t = c = 0
 screen = display.set_mode((860, 710), vsync=1)
-holy_img = transform.scale(image.load('megadeth.jpg'), (650, 550))
-teger_img = transform.scale(image.load('tegernako.jpg'), (650, 550))
-back = transform.scale(image.load('land.jpeg'), (850, 700))
-ball = transform.scale(image.load('circle.png'), (25, 25))
+holy_img = transform.scale(image.load('./assets/megadeth.jpg'), (650, 550))
+teger_img = transform.scale(image.load('./assets/tegernako.jpg'), (650, 550))
+back = transform.scale(image.load('./assets/land.jpeg'), (850, 700))
+ball = transform.scale(image.load('./assets/circle.png'), (25, 25))
 imgs = [holy_img, teger_img]
 pg.font.init()
 helvetica45 = pg.font.SysFont("notomono", 45)
@@ -30,12 +30,12 @@ voltar = helvetica16.render('* ESC = Menu', True, (20, 20, 20))
 tithol = helvetica35.render('Megadeth - Holy Wars', True, (20, 20, 20))
 titteg = helvetica35.render('Eluveitie - Tegernakô', True, (20, 20, 20))
 tits = [tithol, titteg]
-play = pg.image.load('play.png')
-pause = pg.image.load('pause.png')
+play = pg.image.load('./assets/play.png')
+pause = pg.image.load('./assets/pause.png')
 play_pause = [play, pause]
 # Músicas:
-som = mixer.Sound('holywars.ogg')
-som2 = mixer.Sound('tegernako.ogg')
+som = mixer.Sound('./assets/holywars.ogg')
+som2 = mixer.Sound('./assets/tegernako.ogg')
 sons = [som, som2]
 som.set_volume(v)
 run = True
