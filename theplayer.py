@@ -24,189 +24,243 @@ back.set_alpha(100)
 # Fonts:
 
 pg.font.init()
-notomono45 = pg.font.SysFont("notomono", 45, bold=True)
+quicksand60 = pg.font.SysFont("quicksand", 60)
 notomono35 = pg.font.SysFont("notomono", 35)
-notomono30 = pg.font.SysFont("notomono", 30, italic=True)
-notomono25 = pg.font.SysFont("notomono", 25)
-notomono20 = pg.font.SysFont("notomono", 20)
+notomono30_italic = pg.font.SysFont("notomono", 30, italic=True)
+quicksand38 = pg.font.SysFont("quicksand", 38)
+quicksand22 = pg.font.SysFont("quicksand", 22)
+notomono22 = pg.font.SysFont("notomono", 22)
+quicksand20 = pg.font.SysFont("quicksand", 20)
 notomono16 = pg.font.SysFont("notomono", 16)
 notomono20_italic = pg.font.SysFont("notomono", 20, italic=True)
-player = notomono45.render('{ NEO PLAYER }', True, (255, 255, 255))
+player = quicksand60.render('{ NEO PLAYER }', True, (255, 255, 255))
 
 # Menu:
 
 display.set_caption('NEO PLAYER')
-opt1 = notomono25.render('1 - Megadeth  - Holy Wars', True, (250, 250, 250))
-opt2 = notomono25.render('2 - Eluveitie - Tegernakô', True, (250, 250, 250))
-opt3 = notomono25.render('3 - Metallica - Fuel', True, (250, 250, 250))
-opt4 = notomono25.render('4 - Metallica - One', True, (250, 250, 250))
-opt5 = notomono25.render('5 - Metallica - Enter Sandman', True, (250, 250, 250))
-opt6 = notomono25.render('6 - Metallica - The Unforgiven', True, (250, 250, 250))
-opt7 = notomono25.render('7 - Metallica - Nothing Else Matters', True, (250, 250, 250))
-opt8 = notomono25.render('8 - Metallica - Fade to Black', True, (250, 250, 250))
-opt9 = notomono25.render('9 - Metallica - For Whom the Bell Tolls', True, (250, 250, 250))
+opt1 = quicksand22.render('1  |  Megadeth - Holy Wars', True, (250, 250, 250))
+opt2 = quicksand22.render('2  |  Eluveitie  - Tegernakô', True, (250, 250, 250))
+opt3 = quicksand22.render('3  |  Metallica  - Fuel', True, (250, 250, 250))
+opt4 = quicksand22.render('4  |  Metallica  - One', True, (250, 250, 250))
+opt5 = quicksand22.render('5  |  Metallica  - Enter Sandman', True, (250, 250, 250))
+opt6 = quicksand22.render('6  |  Metallica  - The Unforgiven', True, (250, 250, 250))
+opt7 = quicksand22.render('7  |  Metallica  - Nothing Else Matters', True, (250, 250, 250))
+opt8 = quicksand22.render('8  |  Metallica  - Fade to Black', True, (250, 250, 250))
+opt9 = quicksand22.render('9  |  Metallica  - For Whom the Bell Tolls', True, (250, 250, 250))
 options = [opt1, opt2, opt3, opt4, opt5, opt6, opt7, opt8, opt9]
-selecione = notomono16.render('*Selecione a música pelo número', True, (200, 200, 200))
+"""dur = s / 61.95
+minu = int(dur)
+seg = int((dur - minu) * 10)
+seg2 = int((dur * 10 - int(dur * 10)) * 10)
+dur_m = notomono22.render(f'| {minu}:{seg}{seg2}', True, (250, 250, 250))"""
 author = notomono20_italic.render('By $Neo', True, (180, 170, 160))
-
-# Music screen:
-
-play = pg.transform.scale(pg.image.load('./assets/play.png'), (35, 35))
-pause = pg.transform.scale(pg.image.load('./assets/pause.png'), (35, 35))
-play_pause = [play, pause]
-
-# Songs:
-
-som = mixer.Sound('./assets/holywars.ogg')
-loading_text = notomono25.render('Loaded "Holy Wars"', True, (250, 250, 250))
-screen.blit(loading_text, (180, 100))
-display.update()
-som2 = mixer.Sound('./assets/tegernako.ogg')
-loading_text = notomono25.render('Loaded "Tegernakô"', True, (250, 250, 250))
-screen.blit(loading_text, (180, 150))
-display.update()
-som3 = mixer.Sound('./assets/Metallica - Fuel (Official Music Video).ogg')
-loading_text = notomono25.render('Loaded "Fuel"', True, (250, 250, 250))
-screen.blit(loading_text, (180, 200))
-display.update()
-som4 = mixer.Sound('./assets/Metallica: One (Official Music Video).ogg')
-loading_text = notomono25.render('Loaded "One"', True, (250, 250, 250))
-screen.blit(loading_text, (180, 250))
-display.update()
-som5 = mixer.Sound('./assets/Metallica: Enter Sandman (Official Music Video).ogg')
-loading_text = notomono25.render('Loaded "Enter Sandman"', True, (250, 250, 250))
-screen.blit(loading_text, (180, 300))
-display.update()
-som6 = mixer.Sound('./assets/Metallica - The Unforgiven (Official Music Video).ogg')
-loading_text = notomono25.render('Loaded "The Unforgiven"', True, (250, 250, 250))
-screen.blit(loading_text, (180, 350))
-display.update()
-som7 = mixer.Sound('./assets/Metallica: Nothing Else Matters (Official Music Video).ogg')
-loading_text = notomono25.render('Loaded "Nothing Else Matters"', True, (250, 250, 250))
-screen.blit(loading_text, (180, 400))
-display.update()
-som8 = mixer.Sound('./assets/Fade To Black.ogg')
-loading_text = notomono25.render('Loaded "Fade to Black"', True, (250, 250, 250))
-screen.blit(loading_text, (180, 450))
-display.update()
-som9 = mixer.Sound('./assets/For Whom The Bell Tolls.ogg')
-loading_text = notomono25.render('Loaded "For Whom The Bell Tolls"', True, (250, 250, 250))
-screen.blit(loading_text, (180, 500))
-display.update()
-sons = [som, som2, som3, som4, som5, som6, som7, som8, som9]
 
 
 def playing(i):
-    v = 1
-    p2 = 0
-    pp = 1
-    color_change = 0
-    z = 3
-    img_movement = 1200
+    v = pp = 1
+    color_change = img_alpha_change = p2 = 0
+    n = 5
+    m = 8
+    playpausex = 66
+    playpausey = 642
+    playpausesize = 38
+    z = 10
     playrun = True
-    pr = 125
+    clicking = False
+    pr = 110
     clock = pg.time.Clock()
     while playrun:
-        busy1 = mixer.get_busy()
+        song_pos = mixer.music.get_pos() // 1000
+        mx1, my1 = pg.mouse.get_pos()
+        busy1 = mixer.get_busy
         for event1 in pg.event.get():
             if event1.type == pg.QUIT:
                 playrun = False
+            if 70 < mx1 < 104:
+                if 648 < my1 < 680:
+                    playpausex = 65.5
+                    playpausey = 641.7
+                    playpausesize = 40
+                else:
+                    playpausex = 66
+                    playpausey = 642
+                    playpausesize = 38
+            elif pr < mx1 < pr + 25:
+                if 648 < my1 < 680:
+                    m = 10
+                else:
+                    m = 8
+            else:
+                playpausex = 66
+                playpausey = 642
+                playpausesize = 38
+                m = 8
+            if event1.type == MOUSEBUTTONDOWN:
+                button_number1 = event1.button
+                if button_number1 == 1:
+                    if pr < mx1 < pr + 25:
+                        if 648 < my1 < 680:
+                            m = 11
+                            clicking = True
+                    if 70 < mx1 < 104:
+                        if 648 < my1 < 680:
+                            if pr >= 718:
+                                mixer.music.stop()
+                                mixer.music.play(0, 0)
+                                pr = 110
+                                pp = 1
+                            else:
+                                if p2 % 2 == 0:
+                                    mixer.music.pause()
+                                    p2 += 1
+                                    pp = 0
+                                else:
+                                    mixer.music.unpause()
+                                    p2 += 1
+                                    pp = 1
+            if event1.type == MOUSEBUTTONUP:
+                button_number1 = event1.button
+                if color_change >= 60:
+                    if button_number1 == 1:
+                        if pr > 718:
+                            mixer.music.stop()
+                            pr = 718
+                        divi = 720 / s
+                        n = pr / divi
+                        print(s, n)
+                        if n > s:
+                            n = s
+                        mixer.music.play(0, n)
+                        clicking = False
+                        if pr < 115:
+                            pr = 110
+                            mixer.music.play()
             if event1.type == KEYDOWN:
                 key1 = pg.key.get_pressed()
+                if key1[pg.K_RIGHT]:
+                    divi = 736 / s
+                    n = pr / divi
+                    pr += divi * 5
+                    mixer.music.play(0, n)
+                    if pr > 718:
+                        pr = 718
+                if key1[pg.K_LEFT]:
+                    divi = 736 / s
+                    n = - (pr / divi)
+                    pr -= divi * 5
+                    mixer.music.play(0, n)
+                    if pr < 115:
+                        pr = 110
                 if key1[pg.K_ESCAPE]:
                     z = - 3
-                    sons[i].stop()
+                    mixer.music.stop()
                     playrun = False
-                    print('Exiting...')
-                if busy1 == 0:
-                    if key1[pg.K_1]:
-                        i = 0
-                        sons[i].stop()
-                        sons[i].play()
-                        print('Playing "Megadeth - Holy Wars"')
-                    if key1[pg.K_2]:
-                        som2.stop()
-                        som.stop()
-                        som2.play()
-                        p2 = 0
-                        print('Playing "Eluveitie - Tegernakô"')
                 if p2 % 2 == 0:
                     if key1[pg.K_SPACE]:
-                        mixer.pause()
-                        p2 += 1
-                        pp = 0
-                        print('Pause')
+                        if pr >= 818:
+                            mixer.music.play()
+                            pr = 110
+                            pp = 1
+                        else:
+                            mixer.music.pause()
+                            p2 += 1
+                            pp = 0
                 else:
                     if key1[pg.K_SPACE]:
                         mixer.unpause()
                         p2 += 1
                         pp = 1
-                        print('Resume')
                 if key1[pg.K_KP_PLUS]:
                     v += 0.1
-                    if v > 1:
-                        v = 1
-                    sons[i].set_volume(v)
-                    print(f'Volume {int(v * 100)}%')
                     if v >= 1:
                         v = 1
-                        print('Volume Max')
+                    song.set_volume(v)
                 if key1[pg.K_KP_MINUS]:
                     v -= 0.1
-                    if v < 0:
-                        v = 0
-                    sons[i].set_volume(v)
-                    print(f'Volume {int(v * 100)}%')
                     if v <= 0:
                         v = 0
-                        print('Volume Min')
-        clock.tick(100)
-        s = sons[i].get_length()
-        d = 6 / s
+                    song.set_volume(v)
+        clock.tick()
+        d = 10.33 / s
         pr += d
-        img_movement -= 30
-        if img_movement < 0:
-            img_movement = 0
-        if img_movement < 1:
-            color_change += z
-        if color_change > 220:
-            color_change = 220
+        if clicking:
+            pr = mx1 - 15
+            if pr > 718:
+                pr = 718
+            if pr < 115:
+                pr = 110
+        if not clicking:
+            pr += d
+        color_change += z
+        img_alpha_change += 10
+        if img_alpha_change > 255:
+            img_alpha_change = 255
+        if color_change > 60:
+            color_change = 60
         if color_change < 0:
             color_change = 0
         if p2 % 2 != 0:
             pr -= d
-        if pr > 690:
-            pr = 690
+        if pr > 718:
+            pr = 718
+            pp = 0
         rect1_size = (860, 160)
+        rect2_size = (860, 39)
+        rect3_size = (710, 49)
         transp = pg.Surface(rect1_size, pg.SRCALPHA)
-        voltar = notomono16.render('* ESC = Menu', True, (color_change, color_change, color_change))
-        tithol = notomono35.render('Megadeth - Holy Wars', True, (255, 255, 255))
-        titteg = notomono35.render('Eluveitie - Tegernakô', True, (255, 255, 255))
-        fuel = notomono35.render('Metallica - Fuel', True, (255, 255, 255))
-        one = notomono35.render('Metallica - One', True, (255, 255, 255))
-        entersandman = notomono35.render('Metallica - Enter Sandman', True, (255, 255, 255))
-        theunforgiven = notomono35.render('Metallica - The Unforgiven', True, (255, 255, 255))
-        nothingelsematters = notomono35.render('Metallica - Nothing Else Matters', True, (255, 255, 255))
-        fadetoblack = notomono35.render('Metallica - Fade to Black', True, (255, 255, 255))
-        forwhomthebelltolls = notomono35.render('Metallica - For Whom the Bell Tolls', True, (255, 255, 255))
+        barra_transp = pg.Surface(rect2_size, pg.SRCALPHA)
+        barra_transp2 = pg.Surface(rect3_size, pg.SRCALPHA)
+        # Music screen:
+        voltar = notomono16.render('* ESC = Menu', True, (color_change + 120, color_change + 120, color_change + 120))
+        tithol = quicksand38.render('Megadeth - Holy Wars', True, (200, 200, 200))
+        titteg = quicksand38.render('Eluveitie - Tegernakô', True, (255, 255, 255))
+        fuel = quicksand38.render('Metallica - Fuel', True, (255, 255, 255))
+        one = quicksand38.render('Metallica - One', True, (255, 255, 255))
+        entersandman = quicksand38.render('Metallica - Enter Sandman', True, (255, 255, 255))
+        theunforgiven = quicksand38.render('Metallica - The Unforgiven', True, (255, 255, 255))
+        nothingelsematters = quicksand38.render('Metallica - Nothing Else Matters', True, (255, 255, 255))
+        fadetoblack = quicksand38.render('Metallica - Fade to Black', True, (255, 255, 255))
+        forwhomthebelltolls = quicksand38.render('Metallica - For Whom the Bell Tolls', True, (255, 255, 255))
         tits = [tithol, titteg, fuel, one, entersandman, theunforgiven, nothingelsematters, fadetoblack,
                 forwhomthebelltolls]
-        volume = notomono20.render(f'Volume {int(v * 100)}%', True, (color_change, color_change, color_change))
+        volume = quicksand22.render(f'|            Volume {int(v * 100)}%', True, (255, 255, 255))
         branco = (color_change, color_change, color_change)
-        preto_transp = (0, 0, 0, color_change)
-        pg.draw.rect(transp, preto_transp, transp.get_rect(), 500)
+        azul_escuro = (0, 0, 100)
+        preto_transp = (0, 0, 0, 180)
+        azul_escuro_transp = (0, 0, 50, 200)
         screen.fill((0, 0, 0))
-        screen.blit(imgs[i], (img_movement, 0))
-        imgs[i].set_alpha(color_change * 10)
-        screen.blit(transp, (0, 550))
-        pg.draw.rect(screen, (0, 0, 0), (84, 577, tits[i].get_width() + 40, 50), border_radius=3)
-        screen.blit(tits[i], (103, 580))
-        screen.blit(voltar, (600, 688))
-        pg.draw.rect(screen, branco, (120, 661, 633, 2), border_radius=20)
-        pg.draw.circle(screen, branco, center=(pr + 10, 662), radius=11)
-        screen.blit(volume, (620, 620))
-        pg.draw.rect(screen, branco, (72, 643, 38, 38), border_radius=20)
-        screen.blit(play_pause[pp], (73, 644))
+        # Retângulo grande preto transparente:
+        pg.draw.rect(transp, preto_transp, transp.get_rect(), 0)
+        # Capas dos álbuns:
+        imgs[i].set_alpha(img_alpha_change)
+        screen.blit(imgs[i], (0, 0))
+        screen.blit(transp, (0, 600))
+        # Retângulo azul:
+        pg.draw.rect(barra_transp, azul_escuro_transp, barra_transp.get_rect(), 0)
+        # Retângulo preto transparente:
+        pg.draw.rect(barra_transp2, preto_transp, barra_transp2.get_rect(), 0, border_radius=20)
+        screen.blit(barra_transp, (0, 580))
+        screen.blit(barra_transp2, (57, 636))
+        # Títulos das músicas:
+        screen.blit(tits[i], (70, 572))
+        screen.blit(voltar, (660, 690))
+        # Barra de progresso branca:
+        pg.draw.rect(screen, branco, (120, 661, 618, 3), border_radius=20)
+        # Barra de progresso azul:
+        pg.draw.rect(screen, azul_escuro, (120, 661, pr - 110, 3))
+        # Bola da barra de progresso:
+        pg.draw.circle(screen, azul_escuro, center=(pr + 15, 662), radius=m)
+        # Volume:
+        screen.blit(volume, (620, 585))
+        # Quadrado azul atrás do play/pause:
+        pg.draw.rect(screen, azul_escuro, (playpausex + 1, playpausey + 1, playpausesize - 1, playpausesize - 1),
+                     border_radius=12)
+        if pp == 1:
+            pg.draw.rect(screen, (220, 220, 220), (playpausex + 10, playpausey + 8, playpausesize - 32, playpausesize - 15))
+            pg.draw.rect(screen, (220, 220, 220), (playpausex + 23, playpausey + 8, playpausesize - 32, playpausesize - 15))
+        if pp == 0:
+            pg.draw.polygon(screen, (220, 220, 220), points=
+            ((playpausex + 12, 649), (playpausex + 12, playpausesize + 633), (98, 661)))
         pg.display.update()
 
 
@@ -221,98 +275,154 @@ while run:
     mouse = pg.mouse.get_pressed(num_buttons=5)
     mx, my = pg.mouse.get_pos()
     if 30 < mx < 830:
-        if 292 < my < 328:
+        if 290 < my < 330:
             t1 = t2 = t3 = t4 = t5 = t6 = t7 = t8 = 60
-            t0 = 255
-        elif 330 < my < 368:
+            t0 = 150
+        elif 334 < my < 374:
             t0 = t2 = t3 = t4 = t5 = t6 = t7 = t8 = 60
-            t1 = 255
-        elif 370 < my < 408:
+            t1 = 150
+        elif 378 < my < 408:
             t0 = t1 = t3 = t4 = t5 = t6 = t7 = t8 = 60
-            t2 = 255
-        elif 410 < my < 448:
+            t2 = 150
+        elif 412 < my < 452:
             t0 = t1 = t2 = t4 = t5 = t6 = t7 = t8 = 60
-            t3 = 255
-        elif 450 < my < 488:
+            t3 = 150
+        elif 456 < my < 496:
             t0 = t1 = t2 = t3 = t5 = t6 = t7 = t8 = 60
-            t4 = 255
-        elif 490 < my < 528:
+            t4 = 150
+        elif 500 < my < 540:
             t0 = t1 = t2 = t3 = t4 = t6 = t7 = t8 = 60
-            t5 = 255
-        elif 530 < my < 568:
+            t5 = 150
+        elif 544 < my < 584:
             t0 = t1 = t2 = t3 = t4 = t5 = t7 = t8 = 60
-            t6 = 255
-        elif 570 < my < 608:
+            t6 = 150
+        elif 588 < my < 628:
             t0 = t1 = t2 = t3 = t4 = t5 = t6 = t8 = 60
-            t7 = 255
-        elif 610 < my < 648:
+            t7 = 150
+        elif 632 < my < 672:
             t0 = t1 = t2 = t3 = t4 = t5 = t6 = t7 = 60
-            t8 = 255
+            t8 = 150
         else:
             t0 = t1 = t2 = t3 = t4 = t5 = t6 = t7 = t8 = 60
     else:
         t0 = t1 = t2 = t3 = t4 = t5 = t6 = t7 = t8 = 60
     busy = mixer.get_busy()
+    songs = ['./assets/holywars.ogg', './assets/tegernako.ogg', './assets/Metallica - Fuel (Official Music Video).ogg',
+             './assets/Metallica: One (Official Music Video).ogg',
+             './assets/Metallica: Enter Sandman (Official Music Video).ogg',
+             './assets/Metallica - The Unforgiven (Official Music Video).ogg',
+             './assets/Metallica: Nothing Else Matters (Official Music Video).ogg', './assets/Fade To Black.ogg',
+             './assets/For Whom The Bell Tolls.ogg']
     for event in pg.event.get():
         if event.type == pg.QUIT:
+            run = False
+        key = pg.key.get_pressed()
+        if key[pg.K_ESCAPE]:
             run = False
         key = pg.key.get_pressed()
         if event.type == MOUSEBUTTONDOWN:
             button_number = event.button
             if button_number == 1:
                 if 30 < mx < 830:
-                    if 292 < my < 328:
+                    if 290 < my < 330:
+                        loading = quicksand22.render('Loading . . .', True, (0, 250, 0))
+                        screen.blit(loading, (430, 295))
+                        display.update()
                         p = i = t = 0
-                        sons[i].play()
+                        mixer.music.load(songs[i])
+                        som = mixer.Sound(songs[i])
+                        song = som
+                        s = song.get_length()
+                        mixer.music.play()
                         playing(i)
-                    if 330 < my < 368:
+                    if 332 < my < 372:
+                        loading = quicksand22.render('Loading . . .', True, (0, 250, 0))
+                        screen.blit(loading, (430, 337))
+                        display.update()
                         p = i = t = 1
-                        sons[i].play()
+                        mixer.music.load(songs[i])
+                        som2 = mixer.Sound(songs[i])
+                        song = som2
+                        s = song.get_length()
+                        mixer.music.play()
                         playing(i)
-                    if 370 < my < 408:
+                    if 374 < my < 414:
+                        loading = quicksand22.render('Loading . . .', True, (0, 250, 0))
+                        screen.blit(loading, (430, 379))
+                        display.update()
                         p = i = t = 2
-                        sons[i].play()
+                        mixer.music.load(songs[i])
+                        som3 = mixer.Sound(songs[i])
+                        song = som3
+                        s = song.get_length()
+                        mixer.music.play()
                         playing(i)
-                    if 410 < my < 448:
+                    if 416 < my < 456:
+                        loading = quicksand22.render('Loading . . .', True, (0, 250, 0))
+                        screen.blit(loading, (430, 421))
+                        display.update()
                         p = i = t = 3
-                        sons[i].play()
+                        mixer.music.load(songs[i])
+                        som4 = mixer.Sound(songs[i])
+                        song = som4
+                        s = song.get_length()
+                        mixer.music.play()
                         playing(i)
-                    if 450 < my < 488:
+                    if 458 < my < 498:
+                        loading = quicksand22.render('Loading . . .', True, (0, 250, 0))
+                        screen.blit(loading, (430, 463))
+                        display.update()
                         p = i = t = 4
-                        sons[i].play()
+                        mixer.music.load(songs[i])
+                        som5 = mixer.Sound(songs[i])
+                        song = som5
+                        s = song.get_length()
+                        mixer.music.play()
                         playing(i)
-                    if 490 < my < 528:
+                    if 500 < my < 540:
+                        loading = quicksand22.render('Loading . . .', True, (0, 250, 0))
+                        screen.blit(loading, (430, 505))
+                        display.update()
                         p = i = t = 5
-                        sons[i].play()
+                        mixer.music.load(songs[i])
+                        som6 = mixer.Sound(songs[i])
+                        song = som6
+                        s = song.get_length()
+                        mixer.music.play()
                         playing(i)
-                    if 530 < my < 578:
+                    if 542 < my < 582:
+                        loading = quicksand22.render('Loading . . .', True, (0, 250, 0))
+                        screen.blit(loading, (430, 547))
+                        display.update()
                         p = i = t = 6
-                        sons[i].play()
+                        mixer.music.load(songs[i])
+                        som7 = mixer.Sound(songs[i])
+                        song = som7
+                        s = song.get_length()
+                        mixer.music.play()
                         playing(i)
-                    if 580 < my < 618:
+                    if 584 < my < 624:
+                        loading = quicksand22.render('Loading . . .', True, (0, 250, 0))
+                        screen.blit(loading, (430, 589))
+                        display.update()
                         p = i = t = 7
-                        sons[i].play()
+                        mixer.music.load(songs[i])
+                        som8 = mixer.Sound(songs[i])
+                        song = som8
+                        s = song.get_length()
+                        mixer.music.play()
                         playing(i)
-                    if 620 < my < 658:
+                    if 626 < my < 666:
+                        loading = quicksand22.render('Loading . . .', True, (0, 250, 0))
+                        screen.blit(loading, (430, 631))
+                        display.update()
                         p = i = t = 8
-                        sons[i].play()
+                        mixer.music.load(songs[i])
+                        som9 = mixer.Sound(songs[i])
+                        song = som9
+                        s = song.get_length()
+                        mixer.music.play()
                         playing(i)
-        if event.type == pg.KEYDOWN:
-            if key[pg.K_ESCAPE]:
-                run = False
-                print('Exiting...')
-            if busy == 0:
-                if key[pg.K_1] or key[pg.K_KP_1]:
-                    p = i = t = 0
-                    sons[i].play()
-                    print('Playing "Megadeth - Holy Wars"')
-                    playing(i)
-                if key[pg.K_2] or key[pg.K_KP_2]:
-                    p = 0
-                    t = i = 1
-                    som2.play()
-                    print('Playing "Eluveitie - Tegernakô"')
-                    playing(i)
     screen.fill((0, 0, 10))
     screen.blit(back, (0, 0))
     screen.blit(player, (210, 80))
@@ -339,7 +449,7 @@ while run:
     for k in range(0, len(transp)):
         screen.blit(transp[k], (10, yt + (k * 42)))
     for k in range(0, len(options)):
-        screen.blit(options[k], (30, y + (k * 42)))
-    screen.blit(selecione, (50, 680))
+        screen.blit(options[k], (20, y + (k * 42)))
+    #screen.blit(dur_m, (735, 296))
     screen.blit(author, (750, 680))
     display.update()
