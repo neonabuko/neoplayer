@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
+
 import pygame as pg
 from pygame import mixer, image, display, transform
 from pygame.locals import *
-
 pg.init()
 mixer.init()
 screen = display.set_mode((860, 710), vsync=1)
@@ -35,16 +36,16 @@ player = notomono45.render('{ NEO PLAYER }', True, (255, 255, 255))
 # Menu:
 
 display.set_caption('NEO PLAYER')
-opcao1 = notomono25.render('1 - Megadeth  - Holy Wars', True, (250, 250, 250))
-opcao2 = notomono25.render('2 - Eluveitie - Tegernakô', True, (250, 250, 250))
-opcao3 = notomono25.render('3 - Metallica - Fuel', True, (250, 250, 250))
-opcao4 = notomono25.render('4 - Metallica - One', True, (250, 250, 250))
-opcao5 = notomono25.render('5 - Metallica - Enter Sandman', True, (250, 250, 250))
-opcao6 = notomono25.render('6 - Metallica - The Unforgiven', True, (250, 250, 250))
-opcao7 = notomono25.render('7 - Metallica - Nothing Else Matters', True, (250, 250, 250))
-opcao8 = notomono25.render('8 - Metallica - Fade to Black', True, (250, 250, 250))
-opcao9 = notomono25.render('9 - Metallica - For Whom the Bell Tolls', True, (250, 250, 250))
-opcoes = [opcao1, opcao2, opcao3, opcao4, opcao5, opcao6, opcao7, opcao8, opcao9]
+opt1 = notomono25.render('1 - Megadeth  - Holy Wars', True, (250, 250, 250))
+opt2 = notomono25.render('2 - Eluveitie - Tegernakô', True, (250, 250, 250))
+opt3 = notomono25.render('3 - Metallica - Fuel', True, (250, 250, 250))
+opt4 = notomono25.render('4 - Metallica - One', True, (250, 250, 250))
+opt5 = notomono25.render('5 - Metallica - Enter Sandman', True, (250, 250, 250))
+opt6 = notomono25.render('6 - Metallica - The Unforgiven', True, (250, 250, 250))
+opt7 = notomono25.render('7 - Metallica - Nothing Else Matters', True, (250, 250, 250))
+opt8 = notomono25.render('8 - Metallica - Fade to Black', True, (250, 250, 250))
+opt9 = notomono25.render('9 - Metallica - For Whom the Bell Tolls', True, (250, 250, 250))
+options = [opt1, opt2, opt3, opt4, opt5, opt6, opt7, opt8, opt9]
 selecione = notomono16.render('*Selecione a música pelo número', True, (200, 200, 200))
 author = notomono20_italic.render('By $Neo', True, (180, 170, 160))
 
@@ -54,19 +55,45 @@ play = pg.transform.scale(pg.image.load('./assets/play.png'), (35, 35))
 pause = pg.transform.scale(pg.image.load('./assets/pause.png'), (35, 35))
 play_pause = [play, pause]
 
-# Músicas:
+# Songs:
 
 som = mixer.Sound('./assets/holywars.ogg')
+loading_text = notomono25.render('Loaded "Holy Wars"', True, (250, 250, 250))
+screen.blit(loading_text, (180, 100))
+display.update()
 som2 = mixer.Sound('./assets/tegernako.ogg')
+loading_text = notomono25.render('Loaded "Tegernakô"', True, (250, 250, 250))
+screen.blit(loading_text, (180, 150))
+display.update()
 som3 = mixer.Sound('./assets/Metallica - Fuel (Official Music Video).ogg')
+loading_text = notomono25.render('Loaded "Fuel"', True, (250, 250, 250))
+screen.blit(loading_text, (180, 200))
+display.update()
 som4 = mixer.Sound('./assets/Metallica: One (Official Music Video).ogg')
+loading_text = notomono25.render('Loaded "One"', True, (250, 250, 250))
+screen.blit(loading_text, (180, 250))
+display.update()
 som5 = mixer.Sound('./assets/Metallica: Enter Sandman (Official Music Video).ogg')
+loading_text = notomono25.render('Loaded "Enter Sandman"', True, (250, 250, 250))
+screen.blit(loading_text, (180, 300))
+display.update()
 som6 = mixer.Sound('./assets/Metallica - The Unforgiven (Official Music Video).ogg')
+loading_text = notomono25.render('Loaded "The Unforgiven"', True, (250, 250, 250))
+screen.blit(loading_text, (180, 350))
+display.update()
 som7 = mixer.Sound('./assets/Metallica: Nothing Else Matters (Official Music Video).ogg')
+loading_text = notomono25.render('Loaded "Nothing Else Matters"', True, (250, 250, 250))
+screen.blit(loading_text, (180, 400))
+display.update()
 som8 = mixer.Sound('./assets/Fade To Black.ogg')
+loading_text = notomono25.render('Loaded "Fade to Black"', True, (250, 250, 250))
+screen.blit(loading_text, (180, 450))
+display.update()
 som9 = mixer.Sound('./assets/For Whom The Bell Tolls.ogg')
+loading_text = notomono25.render('Loaded "For Whom The Bell Tolls"', True, (250, 250, 250))
+screen.blit(loading_text, (180, 500))
+display.update()
 sons = [som, som2, som3, som4, som5, som6, som7, som8, som9]
-run = True
 
 
 def playing(i):
@@ -119,8 +146,7 @@ def playing(i):
                     v += 0.1
                     if v > 1:
                         v = 1
-                    som.set_volume(v)
-                    som2.set_volume(v)
+                    sons[i].set_volume(v)
                     print(f'Volume {int(v * 100)}%')
                     if v >= 1:
                         v = 1
@@ -129,8 +155,7 @@ def playing(i):
                     v -= 0.1
                     if v < 0:
                         v = 0
-                    som.set_volume(v)
-                    som2.set_volume(v)
+                    sons[i].set_volume(v)
                     print(f'Volume {int(v * 100)}%')
                     if v <= 0:
                         v = 0
@@ -191,6 +216,7 @@ y = 295
 yt = 290
 i = 0
 t0 = t1 = t2 = t3 = t4 = t5 = t6 = t7 = t8 = 60
+run = True
 while run:
     mouse = pg.mouse.get_pressed(num_buttons=5)
     mx, my = pg.mouse.get_pos()
@@ -312,8 +338,8 @@ while run:
     pg.draw.rect(transp8, (0, 30, 120, t8), transp8.get_rect(), 20, border_radius=50)
     for k in range(0, len(transp)):
         screen.blit(transp[k], (10, yt + (k * 42)))
-    for k in range(0, len(opcoes)):
-        screen.blit(opcoes[k], (30, y + (k * 42)))
+    for k in range(0, len(options)):
+        screen.blit(options[k], (30, y + (k * 42)))
     screen.blit(selecione, (50, 680))
     screen.blit(author, (750, 680))
     display.update()
