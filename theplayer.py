@@ -352,19 +352,21 @@ while run:
 # Passando o mouse por cima das opções:
 	if 10 < mx < 850:
 		if 160 < my < 720:
-			for c in range(0, len(songs)):
-				lista.append(list(range((yt + (c * 42)), (yt + 42 + (c * 42)))))
-				tp.pop(c)
-				tp.insert(c, 40)
-				if (my + (w * 25)) in lista[c]:
-					q = c
-					tp.pop(q)
-					tp.insert(q, 180)
-	if my < 160 or my > 718 or mx > 850 or 10 > mx:
-		tp.pop(q)
-		tp.insert(q, 40)
-		tp[0:len(songs)] = tp	
-		exit.wait(0.08)
+			if len(songs) != 0:
+				for c in range(0, len(songs)):
+					lista.append(list(range((yt + (c * 42)), (yt + 42 + (c * 42)))))
+					tp.pop(c)
+					tp.insert(c, 40)
+					if (my + (w * 25)) in lista[c]:
+						q = c
+						tp.pop(q)
+						tp.insert(q, 180)
+	if len(songs) != 0:
+		if my < 160 or my > 718 or mx > 850 or 10 > mx:
+			tp.pop(q)
+			tp.insert(q, 40)
+			tp[0:len(songs)] = tp	
+			exit.wait(0.08)
 	for event in pg.event.get():
 		if event.type == pg.QUIT:
 			run = False
