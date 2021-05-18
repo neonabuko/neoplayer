@@ -1,34 +1,36 @@
 #!/usr/bin/env python3
 
-#-------------- Bibliotecas ------------------------#
+# Bibliotecas:
 
 from tinytag import TinyTag
+from threading import Event
 import os
+import time
 import datetime
 import pygame as pg
 from pygame import mixer, image, display, transform
 from pygame.locals import *
 pg.init()
 mixer.init()
+exit = Event()
 screen = display.set_mode((860, 720), vsync=1)
 
-#----------------------------------------------- Imagens ------------------------------------------------------#
+# Imagens:
 
-capa = []
-capas = []
 back = transform.scale(image.load('./assets/back.jpg'), (860, 720))
 back2 = transform.scale(image.load('./assets/back.jpg'), (1060, 559))
 player_icon = transform.scale(image.load('./assets/player_back.jpg'), (100, 100))
 
-#--------------------------- Fontes ----------------------------------#
+# Fontes:
 
 pg.font.init()
-quicksand112 = pg.font.SysFont("quicksand", 112)
+quicksand80 = pg.font.SysFont("quicksand", 80)
 notomono35 = pg.font.SysFont("notomono", 35)
 notomono30_italic = pg.font.SysFont("notomono", 30, italic=True)
 quicksand22 = pg.font.SysFont("quicksand", 22)
 notomono22 = pg.font.SysFont("notomono", 22)
 quicksand20 = pg.font.SysFont("quicksand", 20, bold=True)
+quicksand20n = pg.font.SysFont("quicksand", 20)
 quicksand16 = pg.font.SysFont('quicksand', 16, italic=True)
 notomono20_italic = pg.font.SysFont("notomono", 20, italic=True)
 
@@ -36,9 +38,9 @@ notomono20_italic = pg.font.SysFont("notomono", 20, italic=True)
 
 display.set_caption('NEO PLAYER')
 display.set_icon(player_icon)
-player = quicksand112.render('{ NEO PLAYER }', True, (255, 255, 255))
-player3 = quicksand112.render('{ NEO PLAYER }', True, (0, 0, 255))
-player2 = quicksand112.render('{ NEO PLAYER }', True, (0, 0, 0))
+player = quicksand80.render('{ NEO PLAYER }', True, (220, 220, 220))
+player3 = quicksand80.render('{ NEO PLAYER }', True, (0, 0, 180))
+player2 = quicksand80.render('{ NEO PLAYER }', True, (0, 0, 0))
 author = quicksand16.render('by $Neo', True, (255, 255, 255))
 num_mus = 1
 songs = []
@@ -46,6 +48,7 @@ options = []
 nomes_tits = []
 tits = []
 dur_mus = []
+tams_fontes = []
 with os.scandir('./assets') as entries:
 	for entry in entries:
 		if '.ogg' in entry.name:
@@ -56,32 +59,20 @@ with os.scandir('./assets') as entries:
 			dur = int(tag.duration)
 			conversion = datetime.timedelta(seconds=dur)
 			durf = str(conversion)
-			dur_mus.append(quicksand20.render(f'{durf}', True, (255, 255, 255)))
-			options.append(quicksand20.render(f'{num_mus}   |   {name}', True, (0, 255, 0)))
+			dur_mus.append(quicksand20n.render(f'{durf}', True, (255, 255, 255)))
+			options.append(quicksand20.render(f'{num_mus}   |   {name}', True, (255, 255, 255)))
 			nomes_tits.append(name)
 			num_mus += 1
-		if '.jpg' in entry.name or '.jpeg' in entry.name:
-			capa.append(entry.name)
-			capas.append((transform.scale(image.load('./assets/' + entry.name), (860, 720))))
-tams_fontes = []
-for k in range(0, len(nomes_tits)):
-	tam_fonte = (1680 // len(nomes_tits[k]))
-	if tam_fonte > 38:
-		tam_fonte = 38
-	if tam_fonte < 20:
-		tam_fonte = 20
-	tams_fontes.append(tam_fonte)
-	quicksand38 = pg.font.SysFont("quicksand", tams_fontes[k])
-	tits.append(quicksand38.render(f'{nomes_tits[k]}', True, (220, 220, 220)))
 
+capa = transform.scale(image.load('./assets/player_back.jpg'), (1720, 720))
 #----------Função "música tocando"-----------#
 
 def playing(i):
 	v = 1
 	pause = False
-	color_change = p2 = n = d = cor_tits = 0
+	color_change = p2 = n = cor_tits = 0
 	img_alpha_change = 1
-	m = 8
+	m = 0
 	playpausex = 0
 	playpausey = 676
 	playpausesize = 32
@@ -114,12 +105,12 @@ def playing(i):
 				if 692 < my1 < 708:
 					m = 10
 				else:
-					m = 8
+					m = 0
 			else:
 				playpausex = 0
 				playpausey = 676
 				playpausesize = 32
-				m = 8
+				m = 0
 			if event1.type == MOUSEBUTTONDOWN:
 				button_number1 = event1.button
 				if button_number1 == 1:
@@ -166,13 +157,14 @@ def playing(i):
 								prt = 0
 								mixer.music.play()
 								pause = False
-							if prt >= 604:
+							if prt >= 610:
 								mixer.music.stop()
-								prt = 604
+								prt = 610
 								pause = True
-							if prt < 604:
-								divi2 = s / 611
-								n = prt * divi2
+							if prt < 610:
+								divi = 610 / s
+								pos_mus = prt / divi
+								n = pos_mus
 								mixer.music.play(0, n)
 								pause = False
 							if mx1 < 50:
@@ -186,24 +178,21 @@ def playing(i):
 			if event1.type == KEYDOWN:
 				key1 = pg.key.get_pressed()
 				if key1[pg.K_RIGHT]:
-					divi = 611 / s
-					divi2 = s / 611
+					divi = 610 / s
 					prt = pr - 50
-					if prt >= 611:
+					pos_mus = prt / divi
+					if pos_mus == s:
 						mixer.music.stop()
-					if prt < 611 - (divi2 * 5):
-						n = prt * divi2
+						pause = True
+						prt = 610
+					if pos_mus < pos_mus - 5:
 						n += 5
 						pr += divi * 5
 						mixer.music.play(0, n)
-					elif prt > 611 - (divi2 * 5):
-						n += 0
-						pr += 0
 				if key1[pg.K_LEFT]:
+					pause = False
 					prt = pr - 50
-					divi = 611 / s
-					divi2 = s / 611
-					n = prt * divi2
+					divi = 610 / s
 					if prt > 0:
 						n -= 5
 					if n < 0:
@@ -216,7 +205,6 @@ def playing(i):
 					z -= 20
 					ç = 0
 					pause = True
-					pr = 50
 					mixer.music.stop()
 				if not pause:
 					if key1[pg.K_SPACE]:
@@ -233,12 +221,12 @@ def playing(i):
 						mixer.music.unpause()
 						p2 += 1
 						pause = False
-				if key1[pg.K_KP_PLUS]:
+				if key1[pg.K_KP_PLUS] or key1[pg.K_UP]:
 					v += 0.1
 					if v >= 1:
 						v = 1
 					pg.mixer.music.set_volume(v)
-				if key1[pg.K_KP_MINUS]:
+				if key1[pg.K_KP_MINUS] or key1[pg.K_DOWN]:
 					v -= 0.1
 					if v <= 0:
 						v = 0
@@ -272,6 +260,7 @@ def playing(i):
 			img_alpha_change = 255
 		if img_alpha_change <= 0:
 			playrun = False
+
 		if color_change > 80:
 			color_change = 80
 		if color_change < 0:
@@ -280,7 +269,7 @@ def playing(i):
 #-------------------------------------------------------- Tela da música ----------------------------------------------------------------#
 		
 		rect1_size = (860, 185)
-		rect2_size = (860, 39)
+		rect2_size = (860, 41)
 		rect3_size = (630, 20)
 		transp = pg.Surface(rect1_size, pg.SRCALPHA)
 		barra_transp = pg.Surface(rect2_size, pg.SRCALPHA)
@@ -299,11 +288,8 @@ def playing(i):
 		pg.draw.rect(transp, preto_transp, transp.get_rect(), 0)
 		
 	# Capas dos álbuns:
-		d = i
-		if d >= len(capas):
-			d = len(capas) - 1
-		capas[d].set_alpha(img_alpha_change)
-		screen.blit(capas[d], (0, 0))
+		capa.set_alpha(img_alpha_change)
+		screen.blit(capa, (- 700, - 85))
 		screen.blit(transp, (0, 633))
 		
 	# Retângulo azul:		
@@ -323,7 +309,7 @@ def playing(i):
 		pg.draw.rect(screen, branco, (50, 698.5, 618, 3))
 		
 	# Barra de progresso azul:		
-		pg.draw.rect(screen, azul_escuro, (50, 698.5, pr - 50, 3))
+		pg.draw.rect(screen, azul_escuro, (50, 698.5, pr - 42, 3))
 		
 	# Bola da barra de progresso:		
 		pg.draw.circle(screen, azul_medio, center=(pr + 7, 699), radius=m)
@@ -336,7 +322,7 @@ def playing(i):
 			screen.blit(play_icon, (playpausex + 1, playpausey - 5))
 		pg.display.update()
 
-button_number = i = ç = q = w = 0
+button_number = i = ç = q = w = g = c = 0
 çn = 15
 y = 168
 yt = 160
@@ -345,6 +331,18 @@ lista = []
 run = True
 exiting = False
 
+for k in range(0, len(nomes_tits)):
+	tam_fonte = (1680 // len(nomes_tits[k]))
+	if tam_fonte > 38:
+		tam_fonte = 38
+	if tam_fonte < 20:
+		tam_fonte = 20
+	tams_fontes.append(tam_fonte)
+	quicksand38 = pg.font.SysFont("quicksand", tams_fontes[k])
+	tits.append(quicksand38.render(f'{nomes_tits[k]}', True, (220, 220, 220)))
+for k in range(0, len(songs)):
+	tp.append(40)
+	
 #---------------------------------------------- Loop do Menu Inicial --------------------------------------------------#
 
 while run:
@@ -352,23 +350,28 @@ while run:
 	mx, my = pg.mouse.get_pos()
 	
 # Passando o mouse por cima das opções:
-	for k in range(0, len(songs)):
-		tp.append(40)
-	if 30 < mx < 830:
-		for c in range(0, len(songs)):
-			lista.append(list(range((yt + (c * 42)), (yt + 42 + (c * 42)))))
-			tp.pop(c)
-			tp.insert(c, 40)
-			if (my + (w * 25)) in lista[c]:
-				q = c
-				tp.pop(q)
-				tp.insert(q, 180)
+	if 10 < mx < 850:
+		if 160 < my < 720:
+			for c in range(0, len(songs)):
+				lista.append(list(range((yt + (c * 42)), (yt + 42 + (c * 42)))))
+				tp.pop(c)
+				tp.insert(c, 40)
+				if (my + (w * 25)) in lista[c]:
+					q = c
+					tp.pop(q)
+					tp.insert(q, 180)
+	if my < 160 or my > 718 or mx > 850 or 10 > mx:
+		tp.pop(q)
+		tp.insert(q, 40)
+		tp[0:len(songs)] = tp	
+		exit.wait(0.08)
 	for event in pg.event.get():
 		if event.type == pg.QUIT:
 			run = False
 		key = pg.key.get_pressed()
 		if key[pg.K_ESCAPE]:
-			çn = - 10
+			çn = - 20
+			exit.set()
 			exiting = True
 			
 	# Clicando nas opções:
@@ -389,6 +392,7 @@ while run:
 							song = som
 							s = song.get_length()
 							mixer.music.play()
+							mixer.music.queue(songs[c])
 							playing(i)
 			if button_number == 4:
 				if (yt + (k * 42)) > 670:
@@ -402,9 +406,9 @@ while run:
 					w -= 1
 
 	ç += çn
-	if ç > 50:
-		ç = 50
-	if ç < 0:
+	if ç > 100:
+		ç = 100
+	if ç < 0 and exiting:
 		run = False
 	screen.fill((0, 0, 10))
 	back.set_alpha(ç)
@@ -420,11 +424,16 @@ while run:
 			screen.blit(transps[k], (10, yt + (k * 42)))
 		for k in range(0, len(options)):
 			screen.blit(options[k], (20, y + (k * 42)))
-			screen.blit(dur_mus[k], (780, y + (k * 42)))
+			screen.blit(dur_mus[k], (765, y + (k * 42)))
 		screen.blit(back2, (-100, - 410))
-		screen.blit(player3, (23, 5))
-		screen.blit(player2, (22, 3))		
-		screen.blit(player, (18, 0))
-		screen.blit(author, (710, 125))
+		screen.blit(player3, (125, 26))
+		screen.blit(player2, (124, 25))		
+		screen.blit(player, (123, 20))
+		screen.blit(author, (585, 110))
+	elif exiting:
+		screen.blit(player3, (125, 306))
+		screen.blit(player2, (124, 305))
+		screen.blit(player, (123, 300))
 	display.update()
+pg.quit()
 
