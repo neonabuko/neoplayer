@@ -421,7 +421,9 @@ while run:
 										tam_fonte = 38
 									if tam_fonte < 20:
 										tam_fonte = 20
+									tams_fontes.append(tam_fonte)
 									quicksand38 = pg.font.SysFont("quicksand", tam_fonte)
+									tits.append(quicksand38.render(f'{name}', True, (220, 220, 220)))
 							elif '.ogg' not in entry.name:
 								count += 1
 					for x in songs:
@@ -437,7 +439,8 @@ while run:
 						tp = []
 						lista = []
 						options = []
-						num_mus = 1
+						tits = []
+						num_mus = 0
 					print('nº de arquivos:', len(arquivos),'outros:', count, 'nº de músicas:', num_mus)
 		if event.type == pg.MOUSEBUTTONUP:
 			button_number = event.button
@@ -498,19 +501,19 @@ while run:
 			for c in range(0, len(tp)):
 				tp[c] = 40
 			exit.wait(0.01)
-		if 820 < mx < 850 and 122 < my < 152:
-			if not r_clicking:
-				rx = 817
-				ry = 119
-				rsize = 33
-			else:
-				rsize = 34
-				rx = 816
-				ry = 118
+	if 820 < mx < 850 and 122 < my < 152:
+		if not r_clicking:
+			rx = 817
+			ry = 119
+			rsize = 33
 		else:
-			rx = 820
-			ry = 122
-			rsize = 30
+			rsize = 34
+			rx = 816
+			ry = 118
+	else:
+		rx = 820
+		ry = 122
+		rsize = 30
 	ç += çn
 	if ç > 100:
 		ç = 100
