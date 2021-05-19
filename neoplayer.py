@@ -26,12 +26,13 @@ elif op_sys == 'nt':
 	print('Checking Python libraries')
 	print()
 	with os.scandir('.') as entries:
-		if installation_register in entry.name:
-			done += 1
+		if 'installation_register' in entry.name:
+			for entry in entries:
+				done += 1
 	if done < 1:
 		print("Installing libraries...")
 		print()
-		os.system('py pip install -r requirements.txt && cd.> installation_regiter.txt')
+		os.system('py -m pip install -r requirements.txt && cd.> installation_register.txt')
 	elif done >= 1:
 		print('All requirements already satisfied')
 		print()
