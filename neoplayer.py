@@ -335,8 +335,28 @@ tams_fontes = []
 tits = []
 lista = []
 nums = []
+mp3s = []
 with os.scandir('./assets') as entries:
 	for entry in entries:
+		if '.mp3' in entry.name:
+			mp3s.append(entry.name)
+			ogg = entry.name.replace('.mp3', '.ogg')
+			mp3 = '"{}"'.format(entry.name)
+			ogg2 = '"{}"'.format(ogg)
+			os.system(f'cd ./assets && ffmpeg -i {mp3} {ogg2}')
+			num_mus += 1
+			nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
+			songs.append('./assets/' + ogg)
+			name = ogg.replace('.ogg', '')
+			nomes_tits.append(name)
+			tag = TinyTag.get('./assets/' + ogg)
+			dur = int(tag.duration)
+			conversion = datetime.timedelta(seconds=dur)
+			durf = str(conversion)
+			dur_mus.append(quicksand20n.render(f'{durf}', True, (255, 255, 255)))
+			options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
+			tp.append(40)
+			os.system(f'cd ./assets && rm {mp3}')	
 		if '.ogg' in entry.name:
 			num_mus += 1
 			nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
@@ -402,6 +422,37 @@ while run:
 					with os.scandir('./assets') as entries:
 						for entry in entries:
 							arquivos.append('./assets/' + entry.name)
+							if '.mp3' in entry.name:
+								count += 1
+								if entry.name not in mp3s:
+									mp3s.append(entry.name)
+									ogg = entry.name.replace('.mp3', '.ogg')
+									mp3 = '"{}"'.format(entry.name)
+									ogg2 = '"{}"'.format(ogg)
+									os.system(f'cd ./assets && ffmpeg -i {mp3} {ogg2}')
+									songs.append('./assets/' + ogg)
+									tp.append(40)
+									name = ogg.replace('.ogg', '')
+									tag = TinyTag.get('./assets/' + ogg)
+									dur = int(tag.duration)
+									conversion = datetime.timedelta(seconds=dur)
+									durf = str(conversion)
+									num_mus += 1
+									nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
+									dur_mus.append(quicksand20n.render(f'{durf}', True, (255, 255, 255)))
+									options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
+									print(f'{name} adicionado com sucesso!')
+									tam_fonte = (1680 // len(name))
+									if tam_fonte > 38:
+										tam_fonte = 38
+									if tam_fonte < 20:
+										tam_fonte = 20
+									tams_fontes.append(tam_fonte)
+									quicksand38 = pg.font.SysFont("quicksand", tam_fonte)
+									tits.append(quicksand38.render(f'{name}', True, (220, 220, 220)))
+									os.system(f'cd ./assets && rm {mp3}')
+									arquivos.remove('./assets/' + entry.name)
+									arquivos.append('./assets/' + ogg)
 							if '.ogg' in entry.name:
 								if ('./assets/' + entry.name) not in songs:
 									songs.append('./assets/' + entry.name)
