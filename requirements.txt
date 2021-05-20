@@ -1,3 +1,4 @@
 tinytag
 datetime
 pygame
+ffmpeg-python
