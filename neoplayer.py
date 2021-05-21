@@ -79,7 +79,7 @@ author = quicksand16.render('by $Neo', True, (255, 255, 255))
 loading = quicksand22b.render('Loading . . .', True, (0, 250, 0))
 capa = transform.scale(image.load('./assets/player_back.jpg'), (1720, 720))
 
-#----------Função "música tocando"-----------#
+#----------Funfadeão "música tocando"-----------#
 
 def playing(i):
 	v = 1
@@ -93,10 +93,14 @@ def playing(i):
 	pr = 10
 	seg = 0
 	minu = 0
+	mixer.init()
+	mixer.music.load(songs[i])
+	mixer.music.play()
 	som = mixer.Sound(songs[i])
 	song = som
 	s = song.get_length()
-# Loop da função:
+	
+# Loop da funfadeão:
 	while playrun:
 		clock = pg.time.Clock()
 		mx1, my1 = pg.mouse.get_pos()
@@ -189,25 +193,23 @@ def playing(i):
 						pr -= pr
 						mixer.music.unload()
 						mixer.quit()
-						mixer.init()
 						i += 1
 						if i >= len(songs):
 							i = 0
-						mixer.music.load(songs[i])
-						mixer.music.play()
+						playrun = False
+						playing(i)
 				
 				# Clicando no previous:
 				
 					if 349 < mx1 < 383 and 655 < my1 < 689:
 						pr -= pr
 						mixer.music.unload()
-						mixer.music.stop()
+						mixer.quit()
 						i -= 1
 						if i < 0:
 							i = len(songs) - 1
-						mixer.music.load(songs[i])
-						mixer.music.play()	
-									
+						playrun = False
+						playing(i)			
 		# Soltando o clique:
 		
 			if event1.type == MOUSEBUTTONUP:
@@ -264,7 +266,7 @@ def playing(i):
 					mixer.music.play(i, n)
 				if key1[pg.K_ESCAPE]:
 					z -= 20
-					ç = 0
+					fade = 0
 					pause = True
 					mixer.quit()
 				if not pause:
@@ -295,7 +297,8 @@ def playing(i):
 						
 	# Velocidade da bolinha azul:
 		clock.tick(60)
-		d = 770 / s
+		d = 840 / s
+		
 	# Conversor do contador:
 		divi = 840 / s
 		prt = pr - 10
@@ -330,6 +333,7 @@ def playing(i):
 			img_alpha_change = 255
 		if img_alpha_change <= 0:
 			playrun = False
+			mixer.quit()
 		if color_change > 80:
 			color_change = 80
 		if color_change < 0:
@@ -413,6 +417,7 @@ tits = []
 lista = []
 nums = []
 mp3s = []
+durf = 0
 with os.scandir('./assets') as entries:
 	for entry in entries:
 		if '.mp3' in entry.name:
@@ -460,8 +465,8 @@ with os.scandir('./assets') as entries:
 		tits.append(quicksand38.render(f'{nomes_tits[k]}', True, (220, 220, 220)))
 
 # Variáveis:
-button_number = i = ç = q = w = count = 0
-çn = 15
+button_number = i = fade = q = w = count = 0
+faden = 15
 y = 168
 yt = 160
 rx = 820
@@ -492,7 +497,7 @@ while run:
 			run = False
 		key = pg.key.get_pressed()
 		if key[pg.K_ESCAPE]:
-			çn = - 20
+			faden = - 20
 			exit.set()
 			exiting = True
 		if event.type == MOUSEBUTTONDOWN:
@@ -546,7 +551,7 @@ while run:
 									tag = TinyTag.get('./assets/' + entry.name)
 									dur = int(tag.duration)
 									conversion = datetime.timedelta(seconds=dur)
-									durfaux = str(conversion)
+									durf = str(conversion)
 									num_mus += 1
 									nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
 									dur_mus.append(quicksand20n.render(f'{durf[2:]}', True, (255, 255, 255)))
@@ -583,7 +588,7 @@ while run:
 			if button_number == 1:
 				r_clicking = False			
 
-			# Clicando nas opções de música:
+			# Clicando nas opfadeões de música:
 	
 				if 30 < mx < 830:
 					for c in range(0, len(tp)):
@@ -600,7 +605,7 @@ while run:
 								pg.draw.rect(screen, (0, 0, 0), (60, (yt + 8 + (i * 42)), 150, 25), border_radius=12)
 								screen.blit(loading, (75, yt + 5 + (c * 42)))
 								pg.display.update()
-							p = t = ç = 0
+							p = t = fade = 0
 							mixer.music.load(songs[c])
 							mixer.music.play()
 							playing(i)
@@ -616,7 +621,7 @@ while run:
 					yt += 25
 					y += 25
 					w -= 1
-# Passando o mouse por cima das opções:
+# Passando o mouse por cima das opfadeões:
 	if len(tp) != 0:
 		for c in range(0, len(tp)):
 			if lista == []:
@@ -648,13 +653,13 @@ while run:
 		ry = 122
 		rsize = 30
 		
-	ç += çn
-	if ç > 100:
-		ç = 100
-	if ç < 0 and exiting:
+	fade += faden
+	if fade > 100:
+		fade = 100
+	if fade < 0 and exiting:
 		run = False
 	screen.fill((0, 0, 10))
-	back.set_alpha(ç)
+	back.set_alpha(fade)
 	screen.blit(back, (0, 0))
 	if not exiting:
 		back2.set_alpha(100)
