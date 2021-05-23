@@ -1,41 +1,29 @@
 #!/usr/bin/env python3
 
-# Bibliotecas:
+# Bibliotecas/Verificação de bibliotecas:
+
 import os
 done = 0
 op_sys = os.name
-if op_sys == 'posix':
-	print('Welcome to Neo Player! You are using GNU/Linux')
-	print()
-	print('Checking Python libraries...')
-	print()
-	with os.scandir('.') as entries:
-		for entry in entries:
-			if 'installation_register' in entry.name:
-				done += 1
-	if done < 1:
-		print("Installing libraries...")
-		print()
-		os.system('pip install -r requirements.txt && touch installation_register')
-	elif done >= 1:
-		print('All requirements already satisfied')
-		print()
-elif op_sys == 'nt':
-	print('Welcome to Neo Player! You are using Windows')
-	print()
-	print('Checking Python libraries')
-	print()
-	with os.scandir('.') as entries:
+
+with os.scandir('.') as entries:
+	for entry in entries:
 		if 'installation_register' in entry.name:
-			for entry in entries:
-				done += 1
-	if done < 1:
-		print("Installing libraries...")
-		print()
+			done += 1
+if done < 1:
+	print("Installing Python libraries...")
+	print()
+	if op_sys == 'posix':
+		os.system('pip install -r requirements.txt && touch installation_register')
+	elif op_sys == 'nt':
 		os.system('py -m pip install -r requirements.txt && cd.> installation_register.txt')
-	elif done >= 1:
-		print('All requirements already satisfied')
-		print()
+	print('Installation done')
+	print()
+elif done >= 1:
+	print()
+	print('Welcome to Neo Player!')
+	print()
+
 from tinytag import TinyTag
 from threading import Event
 import time
@@ -43,6 +31,9 @@ import datetime
 import pygame as pg
 from pygame import mixer, image, display, transform
 from pygame.locals import *
+import multiprocessing as mp
+
+# Iniciando o pygame:
 
 pg.init()
 exit = Event()
@@ -54,7 +45,7 @@ back = transform.scale(image.load('./assets/back.jpg'), (860, 720))
 back2 = transform.scale(image.load('./assets/back.jpg'), (1060, 559))
 player_icon = transform.scale(image.load('./assets/player_back.jpg'), (100, 100))
 
-# Fontes:
+# Fontes dos textos:
 
 pg.font.init()
 quicksand80 = pg.font.SysFont("quicksand", 80)
@@ -68,7 +59,7 @@ quicksand20n = pg.font.SysFont("quicksand", 20)
 quicksand16 = pg.font.SysFont('quicksand', 16, italic=True)
 notomono20_italic = pg.font.SysFont("notomono", 20, italic=True)
 
-#---------------------------------- Textos do Menu Inicial -------------------------------------#
+# Textos do Menu Inicial:
 
 display.set_caption('NEO PLAYER')
 display.set_icon(player_icon)
@@ -79,17 +70,42 @@ author = quicksand16.render('by $Neo', True, (255, 255, 255))
 loading = quicksand22b.render('Loading . . .', True, (0, 250, 0))
 capa = transform.scale(image.load('./assets/player_back.jpg'), (1720, 720))
 
-#----------Funfadeão "música tocando"-----------#
+#---------- Função "música tocando" -----------#
+
 
 def playing(i):
 	v = 1
-	pause = False
 	color_change = n = 0
 	img_alpha_change = 1
 	m = 0
 	z = 10
+	
+# Play/pause x, y, size:
+
+	ppx = 395
+	ppy = 655
+	pps = 50
+	
+# Next x, y, size:
+
+	nx = 455
+	ny = 665
+	ns = 32
+	
+# Previous x, y, size:
+
+	pvx = 350
+	pvy = 665
+	pvs = 32
+	
+# Booleans:	
+
 	playrun = True
 	clicking = False
+	nclicking = False
+	pclicking = False
+	pause = False
+	
 	pr = 10
 	seg = 0
 	minu = 0
@@ -99,53 +115,65 @@ def playing(i):
 	som = mixer.Sound(songs[i])
 	song = som
 	s = song.get_length()
+	nn = 0
+	ppclicking = False
 	
-# Loop da funfadeão:
+# Loop da função:
+
 	while playrun:
-		clock = pg.time.Clock()
+		mus_pos = mixer.music.get_pos() / 1000
 		mx1, my1 = pg.mouse.get_pos()
 		rtx = rty = 0
 		rtsize = 40
-		playpausex = 395
-		playpausey = 655
-		playpausesize = 50
-		nextx = 455
-		nexty = 665
-		nextsize = 32
-		prevx = 350
-		prevy = 665
-		prevsize = 32
+		
 	# Mouse sobre o botão de return:
+	
 		if 0 < mx1 < 42 and 0 < my1 < 42:
 			rtx = rty = - 2
 			rtsize = 47
 		return_button = transform.scale(image.load('./assets/return2.png'), (rtsize, rtsize))
 		
 	# Mouse sobre play/pause:
-		if 394 < mx1 < 446 and 654 < my1 < 706:
-			playpausex = 394
-			playpausey = 654
-			playpausesize = 52
-		play_icon = transform.scale(image.load('./assets/play.png'), (playpausesize, playpausesize))
-		pause_icon = transform.scale(image.load('./assets/pause.png'), (playpausesize, playpausesize))
-		previous_icon = transform.scale(image.load('./assets/previous.png'), (nextsize, nextsize))
+	
+		if 394 < mx1 < 446 and 654 < my1 < 706 and not ppclicking:
+			ppx = 394
+			ppy = 654
+			pps = 52
+		else:
+			ppx = 395
+			ppy = 655
+			pps = 50
+		play_icon = transform.scale(image.load('./assets/play.png'), (pps, pps))
+		pause_icon = transform.scale(image.load('./assets/pause.png'), (pps, pps))
+		previous_icon = transform.scale(image.load('./assets/previous.png'), (ns, ns))
 		
-	# Mouse sobre next:
-		if 453 < mx1 < 485 and 655 < my1 < 689:
-			nextx -= 1
-			nexty -= 1
-			nextsize += 3
-		next_icon = transform.scale(image.load('./assets/next.png'), (nextsize, nextsize))
+	# Mouse sobre o botão next:
+	
+		if 453 < mx1 < 487 and 655 < my1 < 689 and not nclicking:
+			nx = 454
+			ny = 664
+			ns = 35
+		else:
+			nx = 455
+			ny = 665
+			ns = 32
+		next_icon = transform.scale(image.load('./assets/next.png'), (ns, ns))
 		
-	# Mouse sobre previous:
-		if 349 < mx1 < 383 and 655 < my1 < 689:
-			prevx -= 1
-			prevy -= 1
-			prevsize += 3
-		previous_icon = transform.scale(image.load('./assets/previous.png'), (prevsize, prevsize))			
+	# Mouse sobre o botão previous:
+	
+		if 349 < mx1 < 383 and 655 < my1 < 689 and not pclicking:
+			pvx = 349
+			pvy = 664
+			pvs = 35
+		else:
+			pvx = 350
+			pvy = 665
+			pvs = 32
+		previous_icon = transform.scale(image.load('./assets/previous.png'), (pvs, pvs))			
 			
 	# Mouse sobre a bolinha azul:
-		if pr - 15 < mx1 < pr + 15 and 705 < my1 < 716:
+	
+		if pr - 20 < mx1 < pr + 20 and 698 < my1 < 720:
 			m = 7
 		else:
 			m = 0
@@ -155,88 +183,102 @@ def playing(i):
 			if event1.type == MOUSEBUTTONDOWN:
 				button_number1 = event1.button
 				if button_number1 == 1:
+				
+				# Clicando no botão de return:
+				
 					if 10 < mx1 < 40 and 10 < my1 < 40:
 						mixer.music.stop()
 						pause = True
 						playrun = False
 						
 				# Clicando na bolinha azul:
+				
 					if pr - 15 < mx1 < pr + 15 and 705 < my1 < 720:
 						m = 8
 						clicking = True
 							
 				# Clicando na barra de progresso:
+				
 					elif pr + 15 < mx1 < 850 or 10 < mx1 < pr - 15:
 						if 705 < my1 < 720:
 							clicking = True
-					else:
-						clicking = False
 						
 				# Clicando no play/pause:
 				
-					if 394 < mx1 < 449 and 654 < my1 < 708 and pr >= 834:
+					if 394 < mx1 < 449 and 654 < my1 < 708 and pr >= 849 and not clicking:
 						mixer.music.stop()
 						mixer.music.play()
 						pr = 50
+						nn = 0
 						pause = False
-					elif 394 < mx1 < 449 and 654 < my1 < 708:
-						if not pause:
-							mixer.music.pause()
-							pause = True
-						elif pause:
-							mixer.music.unpause()
-							pause = False
+					elif 394 < mx1 < 449 and 654 < my1 < 708 and pr < 849:
+						ppclicking = True
 							
-				# Clicando no next:
+				# Clicando no botão next:
 				
-					if 453 < mx1 < 485 and 655 < my1 < 689:	
-						pr -= pr
-						mixer.music.unload()
-						mixer.quit()
-						i += 1
-						if i >= len(songs):
-							i = 0
-						playrun = False
-						playing(i)
+					if 453 < mx1 < 485 and 655 < my1 < 689:
+						nclicking = True
 				
-				# Clicando no previous:
+				# Clicando no botão previous:
 				
 					if 349 < mx1 < 383 and 655 < my1 < 689:
-						pr -= pr
-						mixer.music.unload()
-						mixer.quit()
-						i -= 1
-						if i < 0:
-							i = len(songs) - 1
-						playrun = False
-						playing(i)			
+						pclicking = True		
+							
 		# Soltando o clique:
 		
 			if event1.type == MOUSEBUTTONUP:
 				button_number1 = event1.button
-				if color_change >= 60 and button_number1 == 1 and clicking:
-					prt = pr - 10
-					if prt <= 0:
-						prt = 0
+				if color_change >= 80 and button_number1 == 1 and clicking:
+					clicking = False
+					prt = pr - 14
+					if pr <= 10:
+						pr = 10
 						mixer.music.play()
 						pause = False
-					if prt >= 840:
+					if pr >= 849:
 						mixer.music.stop()
-						pr = 850
+						pr = 849
 						pause = True
-					else:
-						divi = 840 / s
-						pos_mus = prt / divi
-						n = pos_mus
-						mixer.music.play(0, n)
-						pause = False
-					if mx1 < 10:
+					if mx1 <= 10: 	
 						pr = 10
-					if mx1 >= 10:
-						pr = mx1
-					clicking = False
+						n = 0
+					if 10 < mx1 < 849:
+						d = 840 / s
+						n = prt / d
+						nn = n - mus_pos
+						mixer.music.set_pos(n)
+						pr = mx1 - 4
+						pause = False
+				elif ppclicking and pr < 849:
+					ppclicking = False
+					if not pause:
+						mixer.music.pause()
+						pause = True
+					elif pause:
+						mixer.music.unpause()
+						mixer.music.set_pos(mus_pos)
+						pause = False
+				elif nclicking:
+					nclicking = False
+					pr -= pr
+					mixer.music.unload()
+					mixer.quit()
+					i += 1
+					if i >= len(songs):
+						i = 0
+					playrun = False
+					playing(i)
+				elif pclicking:
+					pr -= pr
+					mixer.music.unload()
+					mixer.quit()
+					i -= 1
+					if i < 0:
+						i = len(songs) - 1
+					playrun = False
+					playing(i)
 								
-	#------------------Apertando teclas---------------#
+		# Apertando teclas:
 
 			if event1.type == KEYDOWN:
 				key1 = pg.key.get_pressed()
@@ -268,7 +310,6 @@ def playing(i):
 					z -= 20
 					fade = 0
 					pause = True
-					mixer.quit()
 				if not pause:
 					if key1[pg.K_SPACE]:
 						if pr >= 850:
@@ -296,37 +337,49 @@ def playing(i):
 					screen.blit(volume, (708, 650))
 						
 	# Velocidade da bolinha azul:
-		clock.tick(60)
+		if ppclicking:
+			pps = 50
+			ppx = 395
+			ppy = 655
+		if nclicking:
+			nx = 455
+			ny = 665
+			ns = 32
+		if pclicking:
+			pvx = 350
+			pvy = 665
+			pvs = 32			
 		d = 840 / s
-		
-	# Conversor do contador:
-		divi = 840 / s
 		prt = pr - 10
-		pos_mus = prt / divi
+	# Conversor do contador de tempo:
+		if mus_pos + nn < s:
+			pos_mus = mus_pos + nn
+		if mus_pos <= 0:
+			pos_mus = s
 		seg = int(pos_mus)
 		minu = int(pos_mus / 60)
 		if seg >= minu * 60:
 			seg -= minu * 60
-
-		if clicking:
-			pr = mx1
+		if clicking:	
+			pr = mx1 - 4		
 			m = 8
 			if pr > 850:
 				pr = 850
+			elif pr < 10:
+				pr = 10
+		elif not clicking and not pause:
+			pr = ((mus_pos + nn) * d) + 10
 			if pr < 10:
 				pr = 10
-		if not clicking:
-			pr += d / 60
-			if pr < 10:
-				pr = 10
-		if pause:
-			pr -= d / 60
-		elif not pause:
-			pr += d / 60
-		if pr > 850:
-			pr = 850
+				mixer.music.stop()
+				mixer.music.play()
+		if pr > 849:
+			pr = 849
 			pause = True
 			mixer.music.stop()
+			
+	# Variações de transparência:
+	
 		color_change += z
 		img_alpha_change += 3.5 * z
 		if img_alpha_change > 255:
@@ -339,7 +392,7 @@ def playing(i):
 		if color_change < 0:
 			color_change = 0
 		
-#-------------------------------------------------------- Tela da música ----------------------------------------------------------------#
+	# Tela da música:
 		
 		rect1_size = (860, 45)
 		rect2_size = (860, 41)
@@ -388,13 +441,13 @@ def playing(i):
 		
 	# Pause/play:		
 		if not pause:
-			screen.blit(pause_icon, (playpausex, playpausey))
+			screen.blit(pause_icon, (ppx, ppy))
 		if pause:
-			screen.blit(play_icon, (playpausex, playpausey))
+			screen.blit(play_icon, (ppx, ppy))
 	
 	# Próxima/anterior:
-		screen.blit(next_icon, (nextx, nexty))
-		screen.blit(previous_icon, (prevx, prevy))
+		screen.blit(next_icon, (nx, ny))
+		screen.blit(previous_icon, (pvx, pvy))
 	
 	# Contador de tempo:
 		contador = quicksand20n.render('{:0>2d}:{:0>2d}'.format(minu, seg), True, (255, 255, 255))
@@ -405,66 +458,113 @@ def playing(i):
 		pg.display.update()
 	
 
+def search_music1():
+	num_mus = 0
+	options = []
+	dur_mus = []
+	nomes_tits = []
+	songs = []
+	tp = []
+	tams_fontes = []
+	tits = []
+	nums = []
+	mp3s = []
+	arquivos = []
+	count = 0
+	durf = 0
 
-num_mus = 0
-options = []
-dur_mus = []
-nomes_tits = []
-songs = []
-tp = []
-tams_fontes = []
-tits = []
-lista = []
-nums = []
-mp3s = []
-durf = 0
-with os.scandir('./assets') as entries:
-	for entry in entries:
-		if '.mp3' in entry.name:
-			mp3s.append(entry.name)
-			ogg = entry.name.replace('.mp3', '.ogg')
-			mp3 = '"{}"'.format(entry.name)
-			ogg2 = '"{}"'.format(ogg)
-			os.system(f'cd ./assets && ffmpeg -i {mp3} {ogg2}')
-			num_mus += 1
-			nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
-			songs.append('./assets/' + ogg)		 
-			name = ogg.replace('.ogg', '')
-			nomes_tits.append(name)
-			tag = TinyTag.get('./assets/' + ogg)
-			dur = int(tag.duration)
-			conversion = datetime.timedelta(seconds=dur)
-			durf = str(conversion)
-			dur_mus.append(quicksand20n.render(f'{durf[2:]}', True, (255, 255, 255)))
-			options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
-			tp.append(40)
-			os.system(f'cd ./assets && rm {mp3}')	
-		if '.ogg' in entry.name:
-			num_mus += 1
-			nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
-			songs.append('./assets/' + entry.name)
+# Procurando/convertendo músicas:
 	
-			 
-			name = entry.name.replace('.ogg', '')
-			nomes_tits.append(name)
-			tag = TinyTag.get('./assets/' + entry.name)
-			dur = int(tag.duration)
-			conversion = datetime.timedelta(seconds=dur)
-			durf = str(conversion)
-			dur_mus.append(quicksand20n.render(f'{durf[2:]}', True, (255, 255, 255)))
-			options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
-			tp.append(40)		
-	for k in range(0, len(nomes_tits)):
-		tam_fonte = (1680 // len(nomes_tits[k]))
-		if tam_fonte > 38:
-			tam_fonte = 38
-		if tam_fonte < 20:
-			tam_fonte = 20
-		tams_fontes.append(tam_fonte)
-		quicksand38 = pg.font.SysFont("quicksand", tams_fontes[k])
-		tits.append(quicksand38.render(f'{nomes_tits[k]}', True, (220, 220, 220)))
+	with os.scandir('./assets') as entries:
+		for entry in entries:
+			arquivos.append('./assets/' + entry.name)
+			if '.mp3' in entry.name:
+				count += 1
+				if entry.name not in mp3s:
+					mp3s.append(entry.name)
+					ogg = entry.name.replace('.mp3', '.ogg')
+					mp3 = '"{}"'.format(entry.name)
+					ogg2 = '"{}"'.format(ogg)
+					os.system(f'cd ./assets && ffmpeg -i {mp3} {ogg2}')
+					songs.append('./assets/' + ogg)	 
+					tp.append(40)
+					name = ogg.replace('.ogg', '')
+					tag = TinyTag.get('./assets/' + ogg)
+					dur = int(tag.duration)
+					conversion = datetime.timedelta(seconds=dur)
+					durf = str(conversion)
+					num_mus += 1
+					nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
+					dur_mus.append(quicksand20n.render(f'{durf[2:]}', True, (255, 255, 255)))
+					options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
+					print(f'{name} adicionado com sucesso!')
+					tam_fonte = (1680 // len(name))
+					if tam_fonte > 38:
+						tam_fonte = 38
+					if tam_fonte < 20:
+						tam_fonte = 20
+					tams_fontes.append(tam_fonte)
+					quicksand38 = pg.font.SysFont("quicksand", tam_fonte)
+					tits.append(quicksand38.render(f'{name}', True, (220, 220, 220)))
+					os.system(f'cd ./assets && rm {mp3}')
+					arquivos.remove('./assets/' + entry.name)
+					arquivos.append('./assets/' + ogg)
+			if '.ogg' in entry.name:
+				if ('./assets/' + entry.name) not in songs:
+					songs.append('./assets/' + entry.name)
+					tp.append(40)
+					name = entry.name.replace('.ogg', '')
+					tag = TinyTag.get('./assets/' + entry.name)
+					dur = int(tag.duration)
+					conversion = datetime.timedelta(seconds=dur)
+					durf = str(conversion)
+					num_mus += 1
+					nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
+					dur_mus.append(quicksand20n.render(f'{durf[2:]}', True, (255, 255, 255)))
+					options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
+					print(f'{name} adicionado com sucesso!')
+					tam_fonte = (1680 // len(name))
+					if tam_fonte > 38:
+						tam_fonte = 38
+					if tam_fonte < 20:
+						tam_fonte = 20
+					tams_fontes.append(tam_fonte)
+					quicksand38 = pg.font.SysFont("quicksand", tam_fonte)
+					tits.append(quicksand38.render(f'{name}', True, (220, 220, 220)))
+			elif '.ogg' not in entry.name:
+				count += 1
+		for x in songs:
+			if x not in arquivos:
+				print(x, 'removido!')
+				options.pop(songs.index(x))
+				tp.pop(songs.index(x))
+				songs.remove(x)
+				num_mus -= 1
 
-# Variáveis:
+		if len(arquivos) == count:
+			songs = []
+			tp = []
+			lista = []
+			options = []
+			tits = []
+			num_mus = 0
+		print('nº de arquivos:', len(arquivos),'outros:', count, 'nº de músicas:', num_mus)
+	return songs, nums, dur_mus, options, tp, tams_fontes, tits, num_mus
+
+search_music1()
+
+lista_sm1 = search_music1()
+songs = lista_sm1[0]
+nums = lista_sm1[1]
+dur_mus = lista_sm1[2]
+options = lista_sm1[3]
+tp = lista_sm1[4]
+tams_fontes = lista_sm1[5]
+tits = lista_sm1[6]
+num_mus = lista_sm1[7]
+
+# Variáveis do menu inicial:
+
 button_number = i = fade = q = w = count = 0
 faden = 15
 y = 168
@@ -478,6 +578,7 @@ dim = False
 is_loading = False
 r_clicking = False
 arquivos = []
+lista = []
 
 #---------------------------------------------- Loop do Menu Inicial --------------------------------------------------#
 
@@ -505,90 +606,22 @@ while run:
 			if button_number == 1:
 				if 820 < mx < 850 and 122 < my < 152:
 					r_clicking = True
-					with os.scandir('./assets') as entries:
-						for entry in entries:
-							arquivos.append('./assets/' + entry.name)
-							if '.mp3' in entry.name:
-								count += 1
-								if entry.name not in mp3s:
-									mp3s.append(entry.name)
-									ogg = entry.name.replace('.mp3', '.ogg')
-									mp3 = '"{}"'.format(entry.name)
-									ogg2 = '"{}"'.format(ogg)
-									os.system(f'cd ./assets && ffmpeg -i {mp3} {ogg2}')
-									songs.append('./assets/' + ogg)
-								
-									 
-									tp.append(40)
-									name = ogg.replace('.ogg', '')
-									tag = TinyTag.get('./assets/' + ogg)
-									dur = int(tag.duration)
-									conversion = datetime.timedelta(seconds=dur)
-									durf = str(conversion)
-									num_mus += 1
-									nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
-									dur_mus.append(quicksand20n.render(f'{durf[2:]}', True, (255, 255, 255)))
-									options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
-									print(f'{name} adicionado com sucesso!')
-									tam_fonte = (1680 // len(name))
-									if tam_fonte > 38:
-										tam_fonte = 38
-									if tam_fonte < 20:
-										tam_fonte = 20
-									tams_fontes.append(tam_fonte)
-									quicksand38 = pg.font.SysFont("quicksand", tam_fonte)
-									tits.append(quicksand38.render(f'{name}', True, (220, 220, 220)))
-									os.system(f'cd ./assets && rm {mp3}')
-									arquivos.remove('./assets/' + entry.name)
-									arquivos.append('./assets/' + ogg)
-							if '.ogg' in entry.name:
-								if ('./assets/' + entry.name) not in songs:
-									songs.append('./assets/' + entry.name)
-								
-									 
-									tp.append(40)
-									name = entry.name.replace('.ogg', '')
-									tag = TinyTag.get('./assets/' + entry.name)
-									dur = int(tag.duration)
-									conversion = datetime.timedelta(seconds=dur)
-									durf = str(conversion)
-									num_mus += 1
-									nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
-									dur_mus.append(quicksand20n.render(f'{durf[2:]}', True, (255, 255, 255)))
-									options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
-									print(f'{name} adicionado com sucesso!')
-									tam_fonte = (1680 // len(name))
-									if tam_fonte > 38:
-										tam_fonte = 38
-									if tam_fonte < 20:
-										tam_fonte = 20
-									tams_fontes.append(tam_fonte)
-									quicksand38 = pg.font.SysFont("quicksand", tam_fonte)
-									tits.append(quicksand38.render(f'{name}', True, (220, 220, 220)))
-							elif '.ogg' not in entry.name:
-								count += 1
-					for x in songs:
-						if x not in arquivos:
-							print(x, 'removido!')
-							options.pop(songs.index(x))
-							tp.pop(songs.index(x))
-							songs.remove(x)
-							num_mus -= 1
-
-					if len(arquivos) == count:
-						songs = []
-						tp = []
-						lista = []
-						options = []
-						tits = []
-						num_mus = 0
-					print('nº de arquivos:', len(arquivos),'outros:', count, 'nº de músicas:', num_mus)
+					search_music1()
+					lista_sm1 = search_music1()
+					songs = lista_sm1[0]
+					nums = lista_sm1[1]
+					dur_mus = lista_sm1[2]
+					options = lista_sm1[3]
+					tp = lista_sm1[4]
+					tams_fontes = lista_sm1[5]
+					tits = lista_sm1[6]
+					num_mus = lista_sm1[7]
 		if event.type == pg.MOUSEBUTTONUP:
 			button_number = event.button
 			if button_number == 1:
 				r_clicking = False			
 
-			# Clicando nas opfadeões de música:
+			# Clicando nas opções de música:
 	
 				if 30 < mx < 830:
 					for c in range(0, len(tp)):
@@ -621,7 +654,9 @@ while run:
 					yt += 25
 					y += 25
 					w -= 1
-# Passando o mouse por cima das opfadeões:
+					
+# Passando o mouse por cima das opções:
+
 	if len(tp) != 0:
 		for c in range(0, len(tp)):
 			if lista == []:
