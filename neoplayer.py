@@ -19,6 +19,7 @@ if done < 1:
 		os.system('py -m pip install -r requirements.txt && cd.> installation_register.txt')
 	print('Installation done')
 	print()
+	print('Welcome to Neo Player!')
 elif done >= 1:
 	print()
 	print('Welcome to Neo Player!')
@@ -551,7 +552,6 @@ def search_music1():
 		print('nº de arquivos:', len(arquivos),'outros:', count, 'nº de músicas:', num_mus)
 	return songs, nums, dur_mus, options, tp, tams_fontes, tits, num_mus
 
-search_music1()
 
 lista_sm1 = search_music1()
 songs = lista_sm1[0]
@@ -606,7 +606,6 @@ while run:
 			if button_number == 1:
 				if 820 < mx < 850 and 122 < my < 152:
 					r_clicking = True
-					search_music1()
 					lista_sm1 = search_music1()
 					songs = lista_sm1[0]
 					nums = lista_sm1[1]
@@ -718,5 +717,4 @@ while run:
 		screen.blit(player, (123, 300))
 	display.update()
 pg.quit()
-
 
