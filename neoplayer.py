@@ -352,6 +352,7 @@ def playing(i):
 			pvs = 32			
 		d = 840 / s
 		prt = pr - 10
+		
 	# Conversor do contador de tempo:
 		if mus_pos + nn < s:
 			pos_mus = mus_pos + nn
@@ -412,7 +413,7 @@ def playing(i):
 		
 	# Capas dos álbuns:
 		capa.set_alpha(img_alpha_change)
-		screen.blit(capa, (- 700, - 85))
+		screen.blit(capa, (- 700, 0))
 		pg.draw.rect(screen, (0, 0, 0), (0, 0, 860, 45))
 		screen.blit(transp, (0, 0))
 		
@@ -458,24 +459,41 @@ def playing(i):
 		screen.blit(dur_mus[i], (90, 675))
 		pg.display.update()
 	
+# Variáveis do menu inicial:
 
-def search_music1():
-	num_mus = 0
-	options = []
-	dur_mus = []
-	nomes_tits = []
-	songs = []
-	tp = []
-	tams_fontes = []
-	tits = []
-	nums = []
-	mp3s = []
-	arquivos = []
+options = []
+dur_mus = []
+nomes_tits = []
+songs = []
+tp = []
+tams_fontes = []
+tits = []
+nums = []
+mp3s = []
+button_number = i = fade = q = w = count = num_mus = durf = count = 0
+faden = 15
+y = 168
+yt = 160
+run = True
+exiting = False
+dim = False
+is_loading = False
+r_clicking = False
+lista = []
+
+#---------------------------------------------- Loop do Menu Inicial --------------------------------------------------#
+
+while run:
+	mixer.init()
+	mouse = pg.mouse.get_pressed(num_buttons=5)
+	mx, my = pg.mouse.get_pos()
 	count = 0
-	durf = 0
-
+	rect_size = (840, 40)
+	barra_azul_transp = pg.Surface(rect_size, pg.SRCALPHA)
+	transps = []
+	arquivos = []
 # Procurando/convertendo músicas:
-	
+
 	with os.scandir('./assets') as entries:
 		for entry in entries:
 			arquivos.append('./assets/' + entry.name)
@@ -510,6 +528,7 @@ def search_music1():
 					os.system(f'cd ./assets && rm {mp3}')
 					arquivos.remove('./assets/' + entry.name)
 					arquivos.append('./assets/' + ogg)
+					time.sleep(0.05)
 			if '.ogg' in entry.name:
 				if ('./assets/' + entry.name) not in songs:
 					songs.append('./assets/' + entry.name)
@@ -532,6 +551,7 @@ def search_music1():
 					tams_fontes.append(tam_fonte)
 					quicksand38 = pg.font.SysFont("quicksand", tam_fonte)
 					tits.append(quicksand38.render(f'{name}', True, (220, 220, 220)))
+					time.sleep(0.05)
 			elif '.ogg' not in entry.name:
 				count += 1
 		for x in songs:
@@ -549,49 +569,6 @@ def search_music1():
 			options = []
 			tits = []
 			num_mus = 0
-		print('nº de arquivos:', len(arquivos),'outros:', count, 'nº de músicas:', num_mus)
-	return songs, nums, dur_mus, options, tp, tams_fontes, tits, num_mus
-
-
-lista_sm1 = search_music1()
-songs = lista_sm1[0]
-nums = lista_sm1[1]
-dur_mus = lista_sm1[2]
-options = lista_sm1[3]
-tp = lista_sm1[4]
-tams_fontes = lista_sm1[5]
-tits = lista_sm1[6]
-num_mus = lista_sm1[7]
-
-# Variáveis do menu inicial:
-
-button_number = i = fade = q = w = count = 0
-faden = 15
-y = 168
-yt = 160
-rx = 820
-ry = 122
-rsize = 30
-run = True
-exiting = False
-dim = False
-is_loading = False
-r_clicking = False
-arquivos = []
-lista = []
-
-#---------------------------------------------- Loop do Menu Inicial --------------------------------------------------#
-
-while run:
-	mixer.init()
-	mouse = pg.mouse.get_pressed(num_buttons=5)
-	mx, my = pg.mouse.get_pos()
-	count = 0
-	arquivos = []
-	rect_size = (840, 40)
-	barra_azul_transp = pg.Surface(rect_size, pg.SRCALPHA)
-	transps = []
-	refresh = transform.scale(image.load('./assets/refresh.png'), (rsize, rsize))
 	
 	for event in pg.event.get():
 		if event.type == pg.QUIT:
@@ -601,20 +578,7 @@ while run:
 			faden = - 20
 			exit.set()
 			exiting = True
-		if event.type == MOUSEBUTTONDOWN:
-			button_number = event.button
-			if button_number == 1:
-				if 820 < mx < 850 and 122 < my < 152:
-					r_clicking = True
-					lista_sm1 = search_music1()
-					songs = lista_sm1[0]
-					nums = lista_sm1[1]
-					dur_mus = lista_sm1[2]
-					options = lista_sm1[3]
-					tp = lista_sm1[4]
-					tams_fontes = lista_sm1[5]
-					tits = lista_sm1[6]
-					num_mus = lista_sm1[7]
+
 		if event.type == pg.MOUSEBUTTONUP:
 			button_number = event.button
 			if button_number == 1:
@@ -673,19 +637,6 @@ while run:
 			for c in range(0, len(tp)):
 				tp[c] = 40
 			exit.wait(0.01)
-	if 820 < mx < 850 and 122 < my < 152:
-		if not r_clicking:
-			rx = 817
-			ry = 119
-			rsize = 33
-		else:
-			rsize = 34
-			rx = 816
-			ry = 118
-	else:
-		rx = 820
-		ry = 122
-		rsize = 30
 		
 	fade += faden
 	if fade > 100:
@@ -710,7 +661,6 @@ while run:
 		screen.blit(player2, (124, 25))		
 		screen.blit(player, (123, 20))
 		screen.blit(author, (585, 110))
-		screen.blit(refresh, (rx, ry))
 	elif exiting:
 		screen.blit(player3, (125, 306))
 		screen.blit(player2, (124, 305))
