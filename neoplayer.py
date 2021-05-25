@@ -14,7 +14,7 @@ if done < 1:
 	print("Installing Python libraries...")
 	print()
 	if op_sys == 'posix':
-		os.system('pip install -r requirements.txt && touch installation_register')
+		os.system('gnome-terminal -- pip install -r requirements.txt && touch installation_register')
 	elif op_sys == 'nt':
 		os.system('py -m pip install -r requirements.txt && cd.> installation_register.txt')
 	print('Installation done')
@@ -151,7 +151,7 @@ def playing(i):
 		
 	# Mouse sobre o botão next:
 	
-		if 453 < mx1 < 487 and 655 < my1 < 689 and not nclicking:
+		if 453 < mx1 < 487 and 663 < my1 < 697 and not nclicking:
 			nx = 454
 			ny = 664
 			ns = 35
@@ -163,7 +163,7 @@ def playing(i):
 		
 	# Mouse sobre o botão previous:
 	
-		if 349 < mx1 < 383 and 655 < my1 < 689 and not pclicking:
+		if 349 < mx1 < 383 and 663 < my1 < 697 and not pclicking:
 			pvx = 349
 			pvy = 664
 			pvs = 35
@@ -218,12 +218,12 @@ def playing(i):
 							
 				# Clicando no botão next:
 				
-					if 453 < mx1 < 485 and 655 < my1 < 689:
+					if 453 < mx1 < 485 and 663 < my1 < 697:
 						nclicking = True
 				
 				# Clicando no botão previous:
 				
-					if 349 < mx1 < 383 and 655 < my1 < 689:
+					if 349 < mx1 < 383 and 663 < my1 < 697:
 						pclicking = True		
 							
 		# Soltando o clique:
@@ -496,15 +496,22 @@ while run:
 
 	with os.scandir('./assets') as entries:
 		for entry in entries:
-			arquivos.append('./assets/' + entry.name)
+			if entry.name not in arquivos:
+				arquivos.append('./assets/' + entry.name)
 			if '.mp3' in entry.name:
 				count += 1
 				if entry.name not in mp3s:
 					mp3s.append(entry.name)
+					converting = quicksand16.render(f'Converting {entry.name}...', True, (255, 255, 255))
+					screen.blit(converting, (10, 140))
+					pg.display.update()
 					ogg = entry.name.replace('.mp3', '.ogg')
 					mp3 = '"{}"'.format(entry.name)
 					ogg2 = '"{}"'.format(ogg)
 					os.system(f'cd ./assets && ffmpeg -i {mp3} {ogg2}')
+#					converted = quicksand16.render('Succesfully converted!', True, (0, 255, 0))
+#					screen.blit(converted, (10, 140))
+#					pg.display.update()
 					songs.append('./assets/' + ogg)	 
 					tp.append(40)
 					name = ogg.replace('.ogg', '')
@@ -514,8 +521,8 @@ while run:
 					durf = str(conversion)
 					num_mus += 1
 					nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
-					dur_mus.append(quicksand20n.render(f'{durf[2:]}', True, (255, 255, 255)))
-					options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
+					dur_mus.append(quicksand20.render(f'  {durf[2:]}', True, (255, 255, 255)))
+					options.append(quicksand20n.render(f'|   {name}', True, (255, 255, 255)))
 					print(f'{name} adicionado com sucesso!')
 					tam_fonte = (1680 // len(name))
 					if tam_fonte > 38:
@@ -540,8 +547,8 @@ while run:
 					durf = str(conversion)
 					num_mus += 1
 					nums.append(quicksand20.render(f'{num_mus}', True, (255, 255, 255)))
-					dur_mus.append(quicksand20n.render(f'{durf[2:]}', True, (255, 255, 255)))
-					options.append(quicksand20.render(f'|  {name}', True, (255, 255, 255)))
+					dur_mus.append(quicksand20.render(f'  {durf[2:]}', True, (255, 255, 255)))
+					options.append(quicksand20n.render(f'|   {name}', True, (255, 255, 255)))
 					print(f'{name} adicionado com sucesso!')
 					tam_fonte = (1680 // len(name))
 					if tam_fonte > 38:
