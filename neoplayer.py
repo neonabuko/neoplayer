@@ -69,6 +69,7 @@ player3 = quicksand80.render('{ NEO PLAYER }', True, (0, 0, 180))
 player2 = quicksand80.render('{ NEO PLAYER }', True, (0, 0, 0))
 author = quicksand16.render('by $Neo', True, (255, 255, 255))
 loading = quicksand22b.render('Loading . . .', True, (0, 250, 0))
+loading2 = quicksand22b.render('Loading . . .', True, (0, 0, 0))
 capa = transform.scale(image.load('./assets/player_back.jpg'), (1720, 720))
 
 #---------- Função "música tocando" -----------#
@@ -478,7 +479,6 @@ run = True
 exiting = False
 dim = False
 is_loading = False
-r_clicking = False
 lista = []
 
 #---------------------------------------------- Loop do Menu Inicial --------------------------------------------------#
@@ -582,7 +582,6 @@ while run:
 		if event.type == pg.MOUSEBUTTONUP:
 			button_number = event.button
 			if button_number == 1:
-				r_clicking = False			
 
 			# Clicando nas opções de música:
 	
@@ -596,10 +595,10 @@ while run:
 							i = c
 							is_loading = True
 							if is_loading:
-								pg.draw.rect(barra_azul_transp, (0, 30, 180, 220), barra_azul_transp.get_rect(), 20, border_radius=5)
+								pg.draw.rect(barra_azul_transp, (0, 30, 255, 255), barra_azul_transp.get_rect(), 20, border_radius=5)
 								screen.blit(barra_azul_transp, (10, yt + (i * 42)))
-								pg.draw.rect(screen, (0, 0, 0), (60, (yt + 8 + (i * 42)), 150, 25), border_radius=12)
-								screen.blit(loading, (75, yt + 5 + (c * 42)))
+								screen.blit(loading2, (52.5, yt + 7.5 + (c * 42)))
+								screen.blit(loading, (50, yt + 5 + (c * 42)))
 								pg.display.update()
 							p = t = fade = 0
 							mixer.music.load(songs[c])
