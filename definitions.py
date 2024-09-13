@@ -1,15 +1,16 @@
-import pygame as pg
+from pygame import font
+from pygame.font import SysFont as fonts
 
-pg.font.init()
+font.init()
 
 class Fonts:
-    quicksand80 = pg.font.SysFont("quicksand", 80)
-    notomono35 = pg.font.SysFont("notomono", 35)
-    notomono30_italic = pg.font.SysFont("notomono", 30, italic=True)
-    quicksand22 = pg.font.SysFont("quicksand", 22)
-    quicksand22b = pg.font.SysFont("quicksand", 22, bold=True)
-    notomono22 = pg.font.SysFont("notomono", 22)
-    quicksand20 = pg.font.SysFont("quicksand", 20, bold=True)
-    quicksand20n = pg.font.SysFont("quicksand", 20)
-    quicksand16 = pg.font.SysFont('quicksand', 16, italic=True)
-    notomono20_italic = pg.font.SysFont("notomono", 20, italic=True)
+    quicksand80 = fonts("quicksand", 80)
+    notomono35 = fonts("notomono", 35)
+    notomono30_italic = fonts("notomono", 30, italic=True)
+    quicksand22 = fonts("quicksand", 22)
+    quicksand22b = fonts("quicksand", 22, bold=True)
+    notomono22 = fonts("notomono", 22)
+    quicksand20 = fonts("quicksand", 20, bold=True)
+    quicksand20n = fonts("quicksand", 20)
+    quicksand16 = fonts('quicksand', 16, italic=True)
+    notomono20_italic = fonts("notomono", 20, italic=True)
